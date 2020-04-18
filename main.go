@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/neelr/gojson/db"
+	"github.com/bitly/go-simplejson"
 )
 
 func isJSON(s string) bool {
@@ -23,9 +24,38 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	name := strings.Replace(r.URL.Path, "/api/", "", 1)
+	keys := strings.Split(name, "/")
 	if r.Method == "POST" || r.Method == "PUT" {
 		if isJSON(string(body)) {
-			db.Write(name, string(body))
+			if db.Find(keys[0]) {
+				if len(keys) > 1 {
+					js, _ := simplejson.NewJson(db.Read(keys[0]))
+					bodyjs, _ := simplejson.NewJson(body)
+					main := js
+					fmt.Println(keys)
+					for i := 1; i < len(keys)-1; i++ {
+						fmt.Println(keys[i])
+						if data, ok := js.CheckGet(keys[i]); ok {
+							js = data
+						} else {
+							js.Set(keys[i], simplejson.New().Interface())
+							js = js.Get(keys[i])
+						}
+					}
+					js.Set(keys[len(keys)-1], bodyjs.Interface())
+					jstring, _ := main.MarshalJSON()
+					fmt.Println(string(jstring))
+					db.Write(keys[0], string(jstring))
+					w.WriteHeader(http.StatusCreated)
+					w.Write([]byte("Done"))
+					return
+				}
+				db.Write(keys[0], string(body))
+				w.WriteHeader(http.StatusCreated)
+				w.Write([]byte("Done"))
+				return
+			}
+			db.Write(keys[0], string(body))
 			w.WriteHeader(http.StatusCreated)
 			w.Write([]byte("Done"))
 			return
@@ -39,8 +69,26 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Done"))
 		return
 	}
-	data := db.Read(name)
+	data := db.Read(keys[0])
 	if data != nil {
+		if len(keys) > 1 {
+			js, _ := simplejson.NewJson(data)
+			fmt.Println(keys)
+			for i := 1; i <= len(keys)-1; i++ {
+				fmt.Println(keys[i])
+				if data, ok := js.CheckGet(keys[i]); ok {
+					js = data
+				} else {
+					w.WriteHeader(http.StatusNotFound)
+					w.Write([]byte("Record not Found"))
+					return
+				}
+			}
+			w.Header().Set("Content-Type", "application/json")
+			jstring, _ := js.MarshalJSON()
+			w.Write([]byte(jstring))
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(data)
 		return

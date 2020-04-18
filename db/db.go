@@ -21,3 +21,8 @@ func Read(id string) []byte {
 func Remove(id string) {
 	os.Remove(fmt.Sprintf(`database/%s.json`, id))
 }
+
+func Find(id string) bool {
+	_, err := os.Stat(fmt.Sprintf(`database/%s.json`, id))
+	return err == nil
+}
