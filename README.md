@@ -25,5 +25,13 @@ Your very own database API endpoint is /api/:key
 
 **DELETE** `/api/f0e4408dc81b90365ed5b11112ff2575`
 
+## Building and Running
 
-MIT LICENSE
+1. Install Golang on your computer
+
+2. Run `git clone https://github.com/neelr/gojson`
+
+3. Go into the directory and run `go run .`!
+
+
+**MIT LICENSE**
