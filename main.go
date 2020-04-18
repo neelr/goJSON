@@ -28,12 +28,11 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" || r.Method == "PUT" {
 		if isJSON(string(body)) {
 			if db.Find(keys[0]) {
-				if len(keys) > 1 {
 					js, _ := simplejson.NewJson(db.Read(keys[0]))
 					bodyjs, _ := simplejson.NewJson(body)
 					main := js
 					fmt.Println(keys)
-					for i := 1; i < len(keys)-1; i++ {
+					for i := 1; i <= len(keys)-1; i++ {
 						fmt.Println(keys[i])
 						if data, ok := js.CheckGet(keys[i]); ok {
 							js = data
@@ -42,18 +41,15 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 							js = js.Get(keys[i])
 						}
 					}
-					js.Set(keys[len(keys)-1], bodyjs.Interface())
+					for k,v := range bodyjs.MustMap() {
+						js.Set(k, v)
+					}
 					jstring, _ := main.MarshalJSON()
 					fmt.Println(string(jstring))
 					db.Write(keys[0], string(jstring))
 					w.WriteHeader(http.StatusCreated)
 					w.Write([]byte("Done"))
 					return
-				}
-				db.Write(keys[0], string(body))
-				w.WriteHeader(http.StatusCreated)
-				w.Write([]byte("Done"))
-				return
 			}
 			db.Write(keys[0], string(body))
 			w.WriteHeader(http.StatusCreated)
