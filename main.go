@@ -64,8 +64,29 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Malformatted Request"))
 		return
 	} else if r.Method == "DELETE" {
+		if len(keys) > 1 {
+			js, _ := simplejson.NewJson(db.Read(keys[0]))
+			main := js
+			fmt.Println(keys)
+			for i := 1; i < len(keys)-1; i++ {
+				fmt.Println(keys[i])
+				if data, ok := js.CheckGet(keys[i]); ok {
+					js = data
+				} else {
+					js.Set(keys[i], simplejson.New().Interface())
+					js = js.Get(keys[i])
+				}
+			}
+			js.Del(keys[len(keys)-1])
+			jstring, _ := main.MarshalJSON()
+			fmt.Println(string(jstring))
+			db.Write(keys[0], string(jstring))
+			w.WriteHeader(204)
+			w.Write([]byte("Done"))
+			return
+		}
 		db.Remove(name)
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(204)
 		w.Write([]byte("Done"))
 		return
 	}
