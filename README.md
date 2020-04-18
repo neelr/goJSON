@@ -1,4 +1,4 @@
-# gojson
+# goJSON
 [![Run on Repl.it](https://repl.it/badge/github/neelr/gojson)](https://repl.it/github/neelr/gojson)
 
 <img src="https://gojson.hacker22.repl.co/gojson.png" width="100"/>
