@@ -22,17 +22,69 @@
 			Open Source and accepting contributors at
 			<a href="https://github.com/neelr/gojson">neelr/goJSON</a>
 		</p>
-		<h2>API</h2>
+		<h2 id="api">API</h2>
 		<p>
 			Your very own database API endpoint is
 			<code>/api/<span class="key"></span></code>
 		</p>
-		<h3>Add/Update Data</h3>
-		<code>POST or PUT /api/<span class="key"></span></code>
-		<h3>View Data</h3>
-		<code>GET /api/<span class="key"></span></code>
-		<h3>Delete Data</h3>
-		<code>DELETE /api/<span class="key"></span></code>
+		<h3 id="add-update-data">Add/Update Data</h3>
+		<p>
+			<strong>POST</strong> or <strong>PUT</strong>
+			<code>/api/<span class="key"></span></code>!
+		</p>
+		<p>Also you can update inner objects using keys!</p>
+		<p>
+			ex. POST <code>/api/<span class="key"></span>/hello/hi</code>
+		</p>
+		<pre><code class="lang-json">{
+  <span class="hljs-attr">"go"</span>:<span class="hljs-literal">true</span>
+}
+</code></pre>
+		<p>will update it to create a JSON</p>
+		<pre><code class="lang-json">{
+  <span class="hljs-attr">"hello"</span>: {
+    <span class="hljs-attr">"hi"</span>: {
+      <span class="hljs-attr">"go"</span>:<span class="hljs-literal">true</span>
+    }
+  }
+}
+</code></pre>
+		<p>
+			Take note that this method only updates, and does not delete any
+			keys in the database when writing.
+		</p>
+		<h3 id="view-data">View Data</h3>
+		<p>
+			<strong>GET</strong>
+			<code>/api/<span class="key"></span></code> or navigate through the
+			keys with <code>/api/<span class="key"></span>/hello</code> would
+			return
+		</p>
+		<pre><code class="lang-json">{
+  <span class="hljs-attr">"hi"</span>: {
+      <span class="hljs-attr">"go"</span>:<span class="hljs-literal">true</span>
+    }
+}
+</code></pre>
+		<h3 id="delete-data">Delete Data</h3>
+		<p>
+			<strong>DELETE</strong>
+			<code>/api/<span class="key"></span></code> and you can delete using
+			the same key navigation given above!
+		</p>
+		<h2 id="building-and-running">Building and Running</h2>
+		<ol>
+			<li><p>Install Golang on your computer</p></li>
+			<li>
+				<p>
+					Run <code>git clone https://github.com/neelr/gojson</code>
+				</p>
+			</li>
+			<li>
+				<p>Go into the directory and run <code>go run .</code>!</p>
+			</li>
+		</ol>
+
 		<footer style="margin-top: 30px;">
 			<p>
 				Made with 💖 by
