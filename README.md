@@ -11,19 +11,47 @@ Open Source and accepting contributors!
 
 ## API
 
-Your very own database API endpoint is /api/:key
+Your very own database API endpoint is `/api/:key`
 
 ### Add/Update Data
 
-**POST** or **PUT** `/api/f0e4408dc81b90365ed5b11112ff2575`
+**POST** or **PUT** `/api/f0e4408dc81b90365ed5b11112ff2575`!
+
+Also you can update inner objects using keys!
+
+ex. POST `/api/f0e4408dc81b90365ed5b11112ff2575/hello/hi`
+ ```json
+{
+  "go":true
+}
+```
+will update it to create a JSON
+```json
+{
+  "hello": {
+    "hi": {
+      "go":true
+    }
+  }
+}
+```
+
+Take note that this method only updates, and does not delete any keys in the database when writing.
 
 ### View Data
 
-**GET** `/api/f0e4408dc81b90365ed5b11112ff2575`
+**GET** `/api/f0e4408dc81b90365ed5b11112ff2575` or navigate through the keys with `/api/f0e4408dc81b90365ed5b11112ff2575/hello` would return
+```json
+{
+  "hi": {
+      "go":true
+    }
+}
+```
 
 ### Delete Data
 
-**DELETE** `/api/f0e4408dc81b90365ed5b11112ff2575`
+**DELETE** `/api/f0e4408dc81b90365ed5b11112ff2575` and you can delete using the same key navigation given above!
 
 ## Building and Running
 
