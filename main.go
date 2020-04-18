@@ -6,10 +6,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strings"
 
-	"github.com/neelr/gojson/db"
 	"github.com/bitly/go-simplejson"
+	"github.com/neelr/gojson/db"
 )
 
 func isJSON(s string) bool {
@@ -23,33 +24,33 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error reading body: %v", err)
 		return
 	}
-	name := strings.Replace(r.URL.Path, "/api/", "", 1)
+	name := strings.Replace(filepath.Clean(r.URL.Path), "/api/", "", 1)
 	keys := strings.Split(name, "/")
 	if r.Method == "POST" || r.Method == "PUT" {
 		if isJSON(string(body)) {
 			if db.Find(keys[0]) {
-					js, _ := simplejson.NewJson(db.Read(keys[0]))
-					bodyjs, _ := simplejson.NewJson(body)
-					main := js
-					fmt.Println(keys)
-					for i := 1; i <= len(keys)-1; i++ {
-						fmt.Println(keys[i])
-						if data, ok := js.CheckGet(keys[i]); ok {
-							js = data
-						} else {
-							js.Set(keys[i], simplejson.New().Interface())
-							js = js.Get(keys[i])
-						}
+				js, _ := simplejson.NewJson(db.Read(keys[0]))
+				bodyjs, _ := simplejson.NewJson(body)
+				main := js
+				fmt.Println(keys)
+				for i := 1; i <= len(keys)-1; i++ {
+					fmt.Println(keys[i])
+					if data, ok := js.CheckGet(keys[i]); ok {
+						js = data
+					} else {
+						js.Set(keys[i], simplejson.New().Interface())
+						js = js.Get(keys[i])
 					}
-					for k,v := range bodyjs.MustMap() {
-						js.Set(k, v)
-					}
-					jstring, _ := main.MarshalJSON()
-					fmt.Println(string(jstring))
-					db.Write(keys[0], string(jstring))
-					w.WriteHeader(http.StatusCreated)
-					w.Write([]byte("Done"))
-					return
+				}
+				for k, v := range bodyjs.MustMap() {
+					js.Set(k, v)
+				}
+				jstring, _ := main.MarshalJSON()
+				fmt.Println(string(jstring))
+				db.Write(keys[0], string(jstring))
+				w.WriteHeader(http.StatusCreated)
+				w.Write([]byte("Done"))
+				return
 			}
 			db.Write(keys[0], string(body))
 			w.WriteHeader(http.StatusCreated)
