@@ -11,7 +11,7 @@ Open Source and accepting contributors!
 
 ## API
 
-Your very own database API endpoint is /api/:key
+Your very own database API endpoint is `/api/:key`
 
 ### Add/Update Data
 
