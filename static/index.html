@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>gojson</title>
+		<link
+			rel="stylesheet"
+			href="https://watercss.netlify.app/dist/light.css"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body>
+		<h1><a href="https://github.com/neelr/gojson">gojson</a></h1>
+		<img src="gojson.png" style="width: 100px;" />
+		<h4>A simple and lightning fast database written in Golang</h4>
+		<p>
+			This api is meant for small projects that just need a fast database,
+			and dont want to mess around with tokens and setting one up
+			yourself! Just copy the link, and use the API methods to store and
+			retrieve any JSON you need!
+		</p>
+		<p>
+			Open Source and accepting contributors at
+			<a href="https://github.com/neelr/gojson">neelr/gojson</a>
+		</p>
+		<h2>API</h2>
+		<p>
+			Your very own database API endpoint is
+			<code>/api/<span class="key"></span></code>
+		</p>
+		<h3>Add/Update Data</h3>
+		<code>POST or PUT /api/<span class="key"></span></code>
+		<h3>View Data</h3>
+		<code>GET /api/<span class="key"></span></code>
+		<h3>Delete Data</h3>
+		<code>DELETE /api/<span class="key"></span></code>
+		<footer style="margin-top: 30px;">
+			<p>
+				Made with 💖 by
+				<a href="https://github.com/neelr/gojson">@neelr</a> and styled
+				with
+				<a href="https://github.com/kognise/water.css">water.css</a>
+			</p>
+		</footer>
+		<script>
+			var randHex = function (len) {
+				var maxlen = 8,
+					min = Math.pow(16, Math.min(len, maxlen) - 1);
+				(max = Math.pow(16, Math.min(len, maxlen)) - 1),
+					(n = Math.floor(Math.random() * (max - min + 1)) + min),
+					(r = n.toString(16));
+				while (r.length < len) {
+					r = r + randHex(len - maxlen);
+				}
+				return r;
+			};
+			const id = randHex(32);
+			Array.prototype.forEach.call(
+				document.getElementsByClassName("key"),
+				(el) => {
+					el.innerHTML = id;
+				}
+			);
+		</script>
+	</body>
+</html>
