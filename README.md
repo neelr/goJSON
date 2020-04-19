@@ -1,4 +1,5 @@
 # goJSON
+
 [![Run on Repl.it](https://repl.it/badge/github/neelr/gojson)](https://repl.it/github/neelr/gojson)
 
 <img src="https://gojson.hacker22.repl.co/gojson.png" width="100"/>
@@ -20,19 +21,22 @@ Your very own database API endpoint is `/api/:key`
 Also you can update inner objects using keys!
 
 ex. POST `/api/f0e4408dc81b90365ed5b11112ff2575/hello/hi`
- ```json
-{
-  "go":true
-}
-```
-will update it to create a JSON
+
 ```json
 {
-  "hello": {
-    "hi": {
-      "go":true
-    }
-  }
+	"go": true
+}
+```
+
+will update it to create a JSON
+
+```json
+{
+	"hello": {
+		"hi": {
+			"go": true
+		}
+	}
 }
 ```
 
@@ -41,11 +45,12 @@ Take note that this method only updates, and does not delete any keys in the dat
 ### View Data
 
 **GET** `/api/f0e4408dc81b90365ed5b11112ff2575` or navigate through the keys with `/api/f0e4408dc81b90365ed5b11112ff2575/hello` would return
+
 ```json
 {
-  "hi": {
-      "go":true
-    }
+	"hi": {
+		"go": true
+	}
 }
 ```
 
@@ -59,7 +64,8 @@ Take note that this method only updates, and does not delete any keys in the dat
 
 2. Run `git clone https://github.com/neelr/gojson`
 
-3. Go into the directory and run `go run .`!
+3. Create an empty `database` folder
 
+4. Go into the directory and run `go run .`!
 
 **MIT LICENSE**
