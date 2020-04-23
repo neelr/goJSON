@@ -68,4 +68,8 @@ Take note that this method only updates, and does not delete any keys in the dat
 
 4. Go into the directory and run `go run .`!
 
+## Contribution
+
+Any type of feedback, pull request or issue is welcome.
+
 **MIT LICENSE**
