@@ -32,21 +32,27 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 				js, _ := simplejson.NewJson(db.Read(keys[0]))
 				bodyjs, _ := simplejson.NewJson(body)
 				main := js
-				fmt.Println(keys)
+				before := js
 				for i := 1; i <= len(keys)-1; i++ {
-					fmt.Println(keys[i])
 					if data, ok := js.CheckGet(keys[i]); ok {
 						js = data
+						if i > 1 {
+							before = js.Get(keys[i-1])
+						}
 					} else {
 						js.Set(keys[i], simplejson.New().Interface())
 						js = js.Get(keys[i])
 					}
 				}
+				stringChecker, _ := js.MarshalJSON()
+				if !strings.Contains(string(stringChecker), "{") {
+					before.Set(keys[len(keys)-1], simplejson.New().Interface())
+					js = before.Get(keys[len(keys)-1])
+				}
 				for k, v := range bodyjs.MustMap() {
 					js.Set(k, v)
 				}
 				jstring, _ := main.MarshalJSON()
-				fmt.Println(string(jstring))
 				db.Write(keys[0], string(jstring))
 				w.WriteHeader(http.StatusCreated)
 				w.Write([]byte("Done"))
