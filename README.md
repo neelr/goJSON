@@ -12,6 +12,8 @@ Open Source and accepting contributors!
 
 ## API
 
+**UPDATE**: To check the magnitude of requests, I made an open source log for the API. Check at https://db.neelr.dev/logs. It only tracks the number of requests, not IP's or anything else.
+
 Your very own database API endpoint is `/api/:key`
 
 ### Add/Update Data
