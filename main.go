@@ -21,6 +21,7 @@ func isJSON(s string) bool {
 
 func logHandle(w http.ResponseWriter, r *http.Request) {
 	logs, _ := ioutil.ReadFile("logs.json")
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(logs)
 }
 
