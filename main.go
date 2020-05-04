@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/bitly/go-simplejson"
 	"github.com/neelr/gojson/db"
@@ -18,7 +19,26 @@ func isJSON(s string) bool {
 	return json.Unmarshal([]byte(s), &js) == nil
 }
 
+func logHandle(w http.ResponseWriter, r *http.Request) {
+	logs, _ := ioutil.ReadFile("logs.json")
+	w.Write(logs)
+}
+
 func indexHandle(w http.ResponseWriter, r *http.Request) {
+
+	// Log the request
+	content, _ := ioutil.ReadFile(`logs.json`)
+	logs, _ := simplejson.NewJson(content)
+	currentTime := time.Now().Format("2006-01-02")
+	if log, ok := logs.CheckGet(currentTime); ok {
+		logs.Set(currentTime, log.MustInt()+1)
+	} else {
+		logs.Set(currentTime, 1)
+	}
+	byteLogs, _ := logs.MarshalJSON()
+	ioutil.WriteFile(`logs.json`, byteLogs, 0644)
+
+	// End of Logging System
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Printf("Error reading body: %v", err)
@@ -37,6 +57,8 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 			bodyjs, _ := simplejson.NewJson(body)
 			main := js
 			before := js
+
+			// Navigate the JSON from the url
 			for i := 1; i <= len(keys)-1; i++ {
 				if data, ok := js.CheckGet(keys[i]); ok {
 					js = data
@@ -48,6 +70,7 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 					js = js.Get(keys[i])
 				}
 			}
+
 			stringChecker, _ := js.MarshalJSON()
 			if !strings.Contains(string(stringChecker), "{") {
 				before.Set(keys[len(keys)-1], simplejson.New().Interface())
@@ -123,6 +146,7 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/api/", indexHandle)
+	http.HandleFunc("/logs", logHandle)
 	fmt.Println("Up on port 3000!")
 	http.ListenAndServe(":3000", nil)
 }
