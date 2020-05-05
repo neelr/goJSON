@@ -107,13 +107,13 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 			jstring, _ := main.MarshalJSON()
 			fmt.Println(string(jstring))
 			db.Write(keys[0], string(jstring))
-			w.WriteHeader(204)
-			w.Write([]byte("Done"))
+			w.WriteHeader(http.StatusNoContent)
+			w.Write([]byte("Deleted"))
 			return
 		}
 		db.Remove(name)
-		w.WriteHeader(204)
-		w.Write([]byte("Done"))
+		w.WriteHeader(http.StatusNoContent)
+		w.Write([]byte("Deleted"))
 		return
 	}
 	data := db.Read(keys[0])
@@ -150,7 +150,9 @@ func main() {
 	mux.HandleFunc("/api/", indexHandle)
 	mux.HandleFunc("/logs", logHandle)
 
-	handler := cors.Default().Handler(mux)
+	handler := cors.New(cors.Options{
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"},
+	}).Handler(mux)
 	fmt.Println("Up on port 3000!")
 	http.ListenAndServe(":3000", handler)
 }
