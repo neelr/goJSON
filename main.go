@@ -19,14 +19,21 @@ func isJSON(s string) bool {
 	return json.Unmarshal([]byte(s), &js) == nil
 }
 
+func cors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Method", "*")
+
+}
+
 func logHandle(w http.ResponseWriter, r *http.Request) {
+	cors(&w)
 	logs, _ := ioutil.ReadFile("logs.json")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(logs)
 }
 
 func indexHandle(w http.ResponseWriter, r *http.Request) {
-
+	cors(&w)
 	// Log the request
 	content, _ := ioutil.ReadFile(`logs.json`)
 	logs, _ := simplejson.NewJson(content)
