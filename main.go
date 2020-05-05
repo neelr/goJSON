@@ -12,6 +12,7 @@ import (
 
 	"github.com/bitly/go-simplejson"
 	"github.com/neelr/gojson/db"
+	"github.com/rs/cors"
 )
 
 func isJSON(s string) bool {
@@ -19,21 +20,13 @@ func isJSON(s string) bool {
 	return json.Unmarshal([]byte(s), &js) == nil
 }
 
-func cors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Method", "*")
-
-}
-
 func logHandle(w http.ResponseWriter, r *http.Request) {
-	cors(&w)
 	logs, _ := ioutil.ReadFile("logs.json")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(logs)
 }
 
 func indexHandle(w http.ResponseWriter, r *http.Request) {
-	cors(&w)
 	// Log the request
 	content, _ := ioutil.ReadFile(`logs.json`)
 	logs, _ := simplejson.NewJson(content)
@@ -152,9 +145,12 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.Handle("/", http.FileServer(http.Dir("./static")))
-	http.HandleFunc("/api/", indexHandle)
-	http.HandleFunc("/logs", logHandle)
+	mux := http.NewServeMux()
+	mux.Handle("/", http.FileServer(http.Dir("./static")))
+	mux.HandleFunc("/api/", indexHandle)
+	mux.HandleFunc("/logs", logHandle)
+
+	handler := cors.Default().Handler(mux)
 	fmt.Println("Up on port 3000!")
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":3000", handler)
 }
