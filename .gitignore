@@ -1,3 +1,6 @@
 database
 gojson
 logs.json
+out
+.next
+node_modules

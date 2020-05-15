@@ -1,2 +1,2 @@
-language = "go"
-run = "go run ."
+language = "nodejs"
+run = "npm run start"
