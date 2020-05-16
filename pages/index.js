@@ -34,7 +34,7 @@ export default class extends React.Component {
                             bg: "secondary",
                             cursor: "pointer"
                         }
-                    }} onClick={this.connect}>Connect 🔌</Button>
+                    }} onClick={x => this.connect()}>Connect 🔌</Button>
                 </Flex>
             </Flex>
         )
