@@ -77,6 +77,12 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 				before.Set(keys[len(keys)-1], simplejson.New().Interface())
 				js = before.Get(keys[len(keys)-1])
 			}
+			// If POST delete everything already there
+			if r.Method == "POST" {
+				for k := range js.MustMap() {
+					js.Del(k)
+				}
+			}
 			for k, v := range bodyjs.MustMap() {
 				js.Set(k, v)
 			}
@@ -93,9 +99,7 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 		if len(keys) > 1 {
 			js, _ := simplejson.NewJson(db.Read(keys[0]))
 			main := js
-			fmt.Println(keys)
 			for i := 1; i < len(keys)-1; i++ {
-				fmt.Println(keys[i])
 				if data, ok := js.CheckGet(keys[i]); ok {
 					js = data
 				} else {
@@ -105,7 +109,6 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 			}
 			js.Del(keys[len(keys)-1])
 			jstring, _ := main.MarshalJSON()
-			fmt.Println(string(jstring))
 			db.Write(keys[0], string(jstring))
 			w.WriteHeader(http.StatusNoContent)
 			w.Write([]byte("Deleted"))
@@ -120,9 +123,7 @@ func indexHandle(w http.ResponseWriter, r *http.Request) {
 	if data != nil {
 		if len(keys) > 1 {
 			js, _ := simplejson.NewJson(data)
-			fmt.Println(keys)
 			for i := 1; i <= len(keys)-1; i++ {
-				fmt.Println(keys[i])
 				if data, ok := js.CheckGet(keys[i]); ok {
 					js = data
 				} else {
@@ -154,5 +155,5 @@ func main() {
 		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"},
 	}).Handler(mux)
 	fmt.Println("Up on port 3000!")
-	http.ListenAndServe(":3000", handler)
+	http.ListenAndServe(":3001", handler)
 }

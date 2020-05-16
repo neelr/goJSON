@@ -42,7 +42,8 @@ will update it to create a JSON
 }
 ```
 
-Take note that this method only updates, and does not delete any keys in the database when writing.
+**IMPORTANT UPDATE**
+Take note that **PUT** method only updates, and does not delete any keys in the database when writing, while **POST** overwrites any existing keys in the same directory. For the example above both work, but instead, if there were other values at /hello/hi **POST** would overwite all of them with `go:true`
 
 ### View Data
 
