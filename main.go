@@ -155,5 +155,5 @@ func main() {
 		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"},
 	}).Handler(mux)
 	fmt.Println("Up on port 3000!")
-	http.ListenAndServe(":3001", handler)
+	http.ListenAndServe(":3000", handler)
 }
