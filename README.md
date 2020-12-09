@@ -14,6 +14,8 @@ Open Source and accepting contributors!
 
 **UPDATE**: To check the magnitude of requests, I made an open source log for the API. Check at https://db.neelr.dev/logs. It only tracks the number of requests, not IP's or anything else.
 
+Use the UI to take a look at your token's database: https://dash.db.neelr.dev
+
 Your very own database API endpoint is `/api/:key`
 
 ### Add/Update Data
